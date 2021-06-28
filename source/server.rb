@@ -404,27 +404,41 @@ def main(opts)
     puts "even"
 
     return_result = "even"
+
+
   else
     sockets[winner].puts("you win")
     sockets[1-winner].puts("you lose")
     puts "player" + (1+winner).to_s + " win"
-    return_result = (1+winner).to_s
+    return "player" + (1+winner).to_s
+    
+
   end
 
   sockets.each do |socket|
     socket.close
   end
+  puts return_result
   tcp_server.close
-  return return_result
+  
+
+
 end
 
 if __FILE__ == $0
-  opts = ARGV.getopts("", "ipaddr:127.0.0.1", "port:2000", "quiet")
+  opts = ARGV.getopts("", "ipaddr:127.0.0.1", "port:2000", "quiet") #opts = {"ipaddr"=>"127.0.0.1", "port"=>"2000", "quiet"=>false}
+
   if opts["quiet"]
     $VERBOSE = nil
   end
-  if ARGV[0]                    # backward compatibility
+  if ARGV[0]                    # backward compatibility, rb server.rb:ARGV[0]
     opts["port"] = ARGV[0]
   end
-  main(opts)
+
+  result = main(opts)
+  
+  File.open("result.txt", mode = "a"){|f|
+    f.write(ARGV[1] + "  " + result + "\n")  # ファイルに書き込む
+  }
+
 end

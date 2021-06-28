@@ -111,7 +111,7 @@ def main(host, port, seed=0):
         with sock.makefile(mode='rw', buffering=1) as sockfile:
             get_msg = sockfile.readline()
             print(get_msg)
-            player = Player_1()
+            player = Player_1(seed)
             sockfile.write(player.initial_condition()+'\n')
             past_msg = ""
 

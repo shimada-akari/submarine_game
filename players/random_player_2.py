@@ -54,7 +54,7 @@ def main(host, port, seed=0):
         with sock.makefile(mode='rw', buffering=1) as sockfile:
             get_msg = sockfile.readline()
             print(get_msg)
-            player = RandomPlayer(seed)
+            player = RandomPlayer(seed) #同じ性質のplayer同士を戦わせるときには、seedを変えることが必要
             sockfile.write(player.initial_condition()+'\n')
 
             while True:
@@ -101,5 +101,6 @@ if __name__ == '__main__':
         default=0,
     )
     args = parser.parse_args()
+    print("seed : {}".format(args.seed))
 
     main(args.host, args.port, seed=args.seed)
