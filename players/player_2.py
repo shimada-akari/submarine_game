@@ -9,7 +9,7 @@ sys.path.append(os.getcwd())
 from lib.player_base import Player, PlayerShip
 
 
-class Player_1(Player):
+class Player_2(Player):
 
     def __init__(self, seed=0):
         random.seed(seed)
@@ -35,8 +35,7 @@ class Player_1(Player):
         
         else:
             past_result = eval(past_result)
-
-            # print("attacked in past_result[result]", "attacked" in past_result["result"])
+            print(past_result)
 
             if "attacked" in past_result["result"]:
                 
@@ -57,8 +56,15 @@ class Player_1(Player):
 
                     else: #hitで船が無くなった
                         if past_attacked["near"] != []: #hitで船が無くなった かつ nearで位置がバレそうな船がある。
+                            near_ships = past_attacked["near"]
                             act = "move"
-                            ship_name = random.choice(past_attacked["near"])#とりあえず、ランダムで船を選んで移動させる。
+                            near_ships_hp = {}
+                            ships_hp_position = past_result["condition"]["me"] #{'w': {'hp': 3, 'position': [2, 1]}
+                            
+                            for s_name in near_ships:
+                                near_ships_hp[s_name] = ships_hp_position[s_name]["hp"]
+                        
+                            ship_name = min(near_ships_hp) #nearで場所がバレた船のうち、一番hpが少ないものの名前
 
                         else:
                             print("lost ship by hit.")
@@ -66,10 +72,17 @@ class Player_1(Player):
 
                 elif past_attacked["near"] != []: #hitされた船はないが、nearで位置がバレそうな船がある。
                     #nearであげられた船の1つを移動させる。（第二優先）<-nearで複数の船があげられたとき、どの船を優先的に動かすべきか？？ 
-                    #一番移動回数が少ないものを動かした方が良いのでは？　動かす回数が多いと履歴で場所が分かりそう。
+                    #一番hpが少ないものを移動させる。
                     print("attacked near.")
                     act = "move"
-                    ship_name = random.choice(past_attacked["near"])#とりあえず、ランダムで船を選んで移動させる。
+                    ships = past_attacked["near"]
+                    ships_hp_position = past_result["condition"]["me"] #{'w': {'hp': 3, 'position': [2, 1]}
+                    
+                    near_ships_hp = {}
+                    for s_name in ships:
+                        near_ships_hp[s_name] = ships_hp_position[s_name]["hp"]
+                
+                    ship_name = min(near_ships_hp) #nearで場所がバレた船のうち、一番hpが少ないものの名前
                 
                 else: #attackedでhit/nearがなかった
                     print("attacked but safe.")
@@ -89,6 +102,7 @@ class Player_1(Player):
             print("ship: {}".format(ship))
 
             to = random.choice(self.field)
+            # print("to: {}", to) #to = [2, 1]
             while not ship.can_reach(to) or not self.overlap(to) is None:
                 to = random.choice(self.field)
 
@@ -111,7 +125,7 @@ def main(host, port, seed=0):
         with sock.makefile(mode='rw', buffering=1) as sockfile:
             get_msg = sockfile.readline()
             print(get_msg)
-            player = Player_1(seed)
+            player = Player_2(seed)
             sockfile.write(player.initial_condition()+'\n')
             past_msg = ""
 

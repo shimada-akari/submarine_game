@@ -403,14 +403,19 @@ def main(opts)
     end
     puts "even"
 
-    return_result = "even"
+    File.open("result.txt", mode = "a"){|f|
+    f.write(opts["trial"] + "  " + "even" + "\n")  # ファイルに書き込む
+  }
 
 
   else
     sockets[winner].puts("you win")
     sockets[1-winner].puts("you lose")
     puts "player" + (1+winner).to_s + " win"
-    return "player" + (1+winner).to_s
+
+    File.open("result.txt", mode = "a"){|f|
+    f.write(opts["trial"] + "  " + "player" + (1+winner).to_s + "\n")  # ファイルに書き込む
+  }
     
 
   end
@@ -418,7 +423,7 @@ def main(opts)
   sockets.each do |socket|
     socket.close
   end
-  puts return_result
+  puts "close sever."
   tcp_server.close
   
 
@@ -435,10 +440,8 @@ if __FILE__ == $0
     opts["port"] = ARGV[0]
   end
 
+  opts["trial"] = ARGV[1]
+
   result = main(opts)
-  
-  File.open("result.txt", mode = "a"){|f|
-    f.write(ARGV[1] + "  " + result + "\n")  # ファイルに書き込む
-  }
 
 end
