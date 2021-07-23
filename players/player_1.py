@@ -88,7 +88,7 @@ class Player_1(Player):
             ship = self.ships[ship_name]
             print("ship: {}".format(ship))
 
-            to = random.choice(self.field)
+            to = random.choice(self.field) #どのくらい移動するのかはランダムで決める
             while not ship.can_reach(to) or not self.overlap(to) is None:
                 to = random.choice(self.field)
 
