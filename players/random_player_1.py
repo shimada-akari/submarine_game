@@ -63,9 +63,11 @@ def main(host, port, seed=0):
                 if info == "your turn":
                     sockfile.write(player.action()+'\n')
                     get_msg = sockfile.readline()
+                    print("random player_1 your trun get_msg: ", get_msg)
                     player.update(get_msg)
                 elif info == "waiting":
                     get_msg = sockfile.readline()
+                    print("random player_1 waiting get_msg: ", get_msg)
                     player.update(get_msg)
                 elif info == "you win":
                     break
@@ -75,6 +77,8 @@ def main(host, port, seed=0):
                     break
                 else:
                     raise RuntimeError("unknown information")
+
+                
 
 
 if __name__ == '__main__':

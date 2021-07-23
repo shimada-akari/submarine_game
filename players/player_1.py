@@ -34,7 +34,7 @@ class Player_1(Player):
             act = "attack"
         
         else:
-            past_result = eval(past_result)
+            past_result = eval(past_result) #json形式をリスト型に変換
 
             # print("attacked in past_result[result]", "attacked" in past_result["result"])
 
@@ -89,14 +89,17 @@ class Player_1(Player):
             print("ship: {}".format(ship))
 
             to = random.choice(self.field) #どのくらい移動するのかはランダムで決める
+            
             while not ship.can_reach(to) or not self.overlap(to) is None:
                 to = random.choice(self.field)
+                
 
             return json.dumps(self.move(ship.type, to))
         elif act == "attack":
             to = random.choice(self.field)
             while not self.can_attack(to):
                 to = random.choice(self.field)
+                print("to : ", to)
 
             return json.dumps(self.attack(to))
 
